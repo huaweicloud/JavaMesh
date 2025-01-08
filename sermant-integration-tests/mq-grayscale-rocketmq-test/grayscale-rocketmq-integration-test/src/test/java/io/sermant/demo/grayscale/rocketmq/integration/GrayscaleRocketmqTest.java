@@ -59,7 +59,7 @@ public class GrayscaleRocketmqTest {
 
     private void testPluginEnabledFalsePull() throws InterruptedException {
         initAndProduceMessage(false, CONSUMER_TYPE_PULL);
-        Thread.sleep(50000);
+        Thread.sleep(120000);
         String baseResult = getPullBaseResult();
         int baseBaseCount = parseBaseMessageCount(baseResult);
         int baseGrayCount = parseGrayMessageCount(baseResult);
@@ -108,7 +108,7 @@ public class GrayscaleRocketmqTest {
 
     private void testAutoOnlyBasePull() throws InterruptedException {
         initAndProduceMessage(false, CONSUMER_TYPE_PULL);
-        Thread.sleep(50000);
+        Thread.sleep(120000);
         String baseResult = getPullBaseResult();
         int baseBaseCount = parseBaseMessageCount(baseResult);
         int baseGrayCount = parseGrayMessageCount(baseResult);
@@ -149,7 +149,7 @@ public class GrayscaleRocketmqTest {
 
     private void testAutoExcOnlyBasePull() throws InterruptedException {
         initAndProduceMessage(false, CONSUMER_TYPE_PULL);
-        Thread.sleep(50000);
+        Thread.sleep(120000);
         String baseResult = getPullBaseResult();
         int baseBaseCount = parseBaseMessageCount(baseResult);
         int baseGrayCount = parseGrayMessageCount(baseResult);
@@ -193,7 +193,7 @@ public class GrayscaleRocketmqTest {
     public void testAutoBaseGrayPull() throws InterruptedException {
         createGrayscaleConfig("AUTO", "");
         initAndProduceMessage(true, CONSUMER_TYPE_PULL);
-        Thread.sleep(50000);
+        Thread.sleep(120000);
         String grayResult = getPullGrayResult();
         int grayGrayCount = parseGrayMessageCount(grayResult);
         String baseResult = getPullBaseResult();
@@ -244,7 +244,7 @@ public class GrayscaleRocketmqTest {
 
     private void testAutoExcBaseGrayPull() throws InterruptedException {
         initAndProduceMessage(true, CONSUMER_TYPE_PULL);
-        Thread.sleep(50000);
+        Thread.sleep(120000);
         String grayResult = getPullGrayResult();
         int grayBaseCount = parseBaseMessageCount(grayResult);
         int grayGrayCount = parseGrayMessageCount(grayResult);
@@ -294,7 +294,7 @@ public class GrayscaleRocketmqTest {
 
     private void testBaseOnlyBasePull() throws InterruptedException {
         initAndProduceMessage(false, CONSUMER_TYPE_PULL);
-        Thread.sleep(50000);
+        Thread.sleep(120000);
         String baseResult = getPullBaseResult();
         int baseBaseCount = parseBaseMessageCount(baseResult);
         int baseGrayCount = parseGrayMessageCount(baseResult);
@@ -335,7 +335,7 @@ public class GrayscaleRocketmqTest {
 
     private void testBaseExcOnlyBasePull() throws InterruptedException {
         initAndProduceMessage(false, CONSUMER_TYPE_PULL);
-        Thread.sleep(50000);
+        Thread.sleep(120000);
         String baseResult = getPullBaseResult();
         int baseBaseCount = parseBaseMessageCount(baseResult);
         int baseGrayCount = parseGrayMessageCount(baseResult);
@@ -376,7 +376,7 @@ public class GrayscaleRocketmqTest {
 
     private void testBaseBaseGrayPull() throws InterruptedException {
         initAndProduceMessage(true, CONSUMER_TYPE_PULL);
-        Thread.sleep(50000);
+        Thread.sleep(120000);
         String baseResult = getPullBaseResult();
         int baseBaseCount = parseBaseMessageCount(baseResult);
         int baseGrayCount = parseGrayMessageCount(baseResult);
@@ -426,7 +426,7 @@ public class GrayscaleRocketmqTest {
 
     private void testBaseExcBaseGrayPull() throws InterruptedException {
         initAndProduceMessage(true, CONSUMER_TYPE_PULL);
-        Thread.sleep(50000);
+        Thread.sleep(120000);
         String baseResult = getPullBaseResult();
         int baseBaseCount = parseBaseMessageCount(baseResult);
         int baseGrayCount = parseGrayMessageCount(baseResult);
@@ -532,6 +532,8 @@ public class GrayscaleRocketmqTest {
     }
 
     private void createGrayscaleConfig(String consumeMode, String excludeTag) {
+        String testModel = System.getProperty("grayscale.rocketmq.integration.test.type");
+        kieClient.updateServiceNameLabels(testModel);
         String CONTENT = "enabled: true\n"
                 + "grayscale:\n"
                 + "  - consumerGroupTag: gray\n"
