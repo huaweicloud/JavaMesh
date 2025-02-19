@@ -91,7 +91,8 @@ public class ApacheDubboInterceptor extends InterceptorSupporter {
         // versions and interfaces are used here to achieve the same end result
         String apiPath = ConvertUtils.buildApiPath(interfaceName, version, methodName);
         final boolean isProvider = isProvider(curInvoker);
-        return new DubboRequestEntity(apiPath, DubboAttachmentsHelper.resolveAttachments(invocation, true),
+        return new DubboRequestEntity(apiPath,
+                DubboAttachmentsHelper.resolveAttachments(invocation, true, isProvider),
                 isProvider ? RequestType.SERVER : RequestType.CLIENT,
                 getApplication(url, interfaceName, isProvider), isGeneric);
     }

@@ -18,6 +18,8 @@
 io.sermant.flowcontrol.DispatcherServletDeclarer
 io.sermant.flowcontrol.AlibabaDubboDeclarer
 io.sermant.flowcontrol.ApacheDubboDeclarer
+io.sermant.flowcontrol.ConsumerRpcExceptionFilterDeclarer
+io.sermant.flowcontrol.MetricsFilterDeclarer
 io.sermant.flowcontrol.config.DubboServiceNameDeclarer
 io.sermant.flowcontrol.config.ApacheDubboConfigDeclarer
 io.sermant.flowcontrol.config.AlibabaDubboConfigDeclarer
