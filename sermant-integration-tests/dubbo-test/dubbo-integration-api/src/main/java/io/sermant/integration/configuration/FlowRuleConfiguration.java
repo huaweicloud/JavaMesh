@@ -18,6 +18,8 @@ package io.sermant.integration.configuration;
 
 import io.sermant.integration.configuration.FlowRuleConfiguration.RuleFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.env.YamlPropertySourceLoader;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.support.EncodedResource;
@@ -33,6 +35,7 @@ import java.io.IOException;
  */
 @org.springframework.context.annotation.PropertySource(value = "classpath:rule.yaml", factory = RuleFactory.class)
 public class FlowRuleConfiguration {
+    private static final Logger LOGGER = LoggerFactory.getLogger(FlowRuleConfiguration.class);
     /**
      * 规则工厂类
      *
@@ -41,6 +44,7 @@ public class FlowRuleConfiguration {
     static class RuleFactory implements PropertySourceFactory {
         @Override
         public PropertySource<?> createPropertySource(String name, EncodedResource resource) throws IOException {
+            LOGGER.info("==============================>load rule.yaml");
             final YamlPropertySourceLoader loader = new YamlPropertySourceLoader();
             return loader.load(name, resource.getResource()).get(0);
         }
