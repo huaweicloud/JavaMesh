@@ -199,7 +199,8 @@ public class ApacheDubboClusterInvoker<T> extends AbstractClusterInvoker<T> {
         // High version using API invocation.getTargetServiceUniqueName access path，
         // versions and interfaces are used here to achieve the same end result
         String apiPath = ConvertUtils.buildApiPath(interfaceName, version, methodName);
-        return new DubboRequestEntity(apiPath, DubboAttachmentsHelper.resolveAttachments(invocation, true),
+        return new DubboRequestEntity(apiPath,
+                DubboAttachmentsHelper.resolveAttachments(invocation, true, false),
                 RequestType.CLIENT, getRemoteApplication(url, interfaceName), isGeneric);
     }
 

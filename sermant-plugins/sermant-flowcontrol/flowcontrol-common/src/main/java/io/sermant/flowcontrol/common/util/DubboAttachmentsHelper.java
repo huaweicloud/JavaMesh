@@ -18,6 +18,8 @@ package io.sermant.flowcontrol.common.util;
 
 import io.sermant.core.utils.ReflectUtils;
 
+import org.apache.dubbo.common.Version;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,6 +40,12 @@ public class DubboAttachmentsHelper {
 
     private static final String GET_CONTEXT_METHOD = "getContext";
 
+    private static final String GET_SERVER_ATTACHMENT_METHOD = "getServerAttachment";
+
+    private static final String GET_CLIENT_ATTACHMENT_METHOD = "getClientAttachment";
+
+    private static final String DUBBO_3X_PREFIX = "3.";
+
     private DubboAttachmentsHelper() {
     }
 
@@ -46,17 +54,30 @@ public class DubboAttachmentsHelper {
      *
      * @param invocation call information
      * @param isApache whether it is apache dubbo
+     * @param isProvider whether it is dubbo server
      * @return Map
      */
-    public static Map<String, String> resolveAttachments(Object invocation, boolean isApache) {
+    public static Map<String, String> resolveAttachments(Object invocation, boolean isApache, boolean isProvider) {
         if (invocation == null) {
             return Collections.emptyMap();
         }
+        String dubboVersion = invocation.getClass().getPackage().getImplementationVersion();
+        if (dubboVersion == null) {
+            dubboVersion = Version.getVersion();
+        }
         final Map<String, String> attachments = new HashMap<>();
         if (isApache) {
-            attachments.putAll(getAttachmentsFromContext(APACHE_RPC_CONTEXT));
+            if (dubboVersion.startsWith(DUBBO_3X_PREFIX)) {
+                if (isProvider) {
+                    attachments.putAll(getAttachmentsFromContext(APACHE_RPC_CONTEXT, GET_SERVER_ATTACHMENT_METHOD));
+                } else {
+                    attachments.putAll(getAttachmentsFromContext(APACHE_RPC_CONTEXT, GET_CLIENT_ATTACHMENT_METHOD));
+                }
+            } else {
+                attachments.putAll(getAttachmentsFromContext(APACHE_RPC_CONTEXT, GET_CONTEXT_METHOD));
+            }
         } else {
-            attachments.putAll(getAttachmentsFromContext(ALIBABA_RPC_CONTEXT));
+            attachments.putAll(getAttachmentsFromContext(ALIBABA_RPC_CONTEXT, GET_CONTEXT_METHOD));
         }
         final Optional<Object> fieldValue = ReflectUtils.getFieldValue(invocation, ATTACHMENTS_FIELD);
         if (fieldValue.isPresent() && fieldValue.get() instanceof Map) {
@@ -65,8 +86,8 @@ public class DubboAttachmentsHelper {
         return Collections.unmodifiableMap(attachments);
     }
 
-    private static Map<String, String> getAttachmentsFromContext(String contextClazz) {
-        final Optional<Object> context = ReflectUtils.invokeMethod(contextClazz, GET_CONTEXT_METHOD, null,
+    private static Map<String, String> getAttachmentsFromContext(String contextClazz, String methodName) {
+        final Optional<Object> context = ReflectUtils.invokeMethod(contextClazz, methodName, null,
                 null);
         if (!context.isPresent()) {
             return Collections.emptyMap();
